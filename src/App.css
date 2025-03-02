@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #3c9cfc;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -35,4 +35,104 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.app-title {
+  margin-bottom: 20px;
+  color: #61dafb;
+}
+
+.note-card {
+  width: 80%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.note-input-container {
+  width: 80%;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.note-textarea {
+  width: 100%;
+  min-height: 150px;
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 2px solid #61dafb;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #282c34;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  gap: 15px;
+}
+
+.custom-file-upload, .submit-button {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: 20px;  /* More curved corners */
+  cursor: pointer;
+  font-size: 17px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  height: 45px;  /* Slightly smaller height */
+  box-sizing: border-box;
+  min-width: min-content;  /* Ensure button is at least as wide as text */
+}
+
+.custom-file-upload {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+}
+
+.custom-file-upload:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.custom-file-upload input[type="file"] {
+  display: none;
+}
+
+.media-upload {
+  margin-bottom: 15px;
+}
+
+.file-input {
+  width: 100%;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  color: #282c34;
+}
+
+.submit-button {
+  background: #61dafb;
+  color: #282c34;
+  border: none;
+  gap: 8px;
+}
+
+.submit-button:hover {
+  background: #4fa8c9;
+}
+
+.paper-plane-icon {
+  font-size: 14px;
 }

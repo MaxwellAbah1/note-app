@@ -1,0 +1,59 @@
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #3c9cfc;
+  position: relative;
+}
+
+.auth-buttons {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.auth-button {
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-button {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.login-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.signup-button {
+  background-color: #61dafb;
+  color: #282c34;
+  border: none;
+}
+
+.signup-button:hover {
+  background-color: #4fa8c9;
+}
+
+.landing-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing-title {
+  font-size: 4rem;
+  color: #61dafb;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
