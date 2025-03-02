@@ -1,33 +1,58 @@
 import '../App.css';
 import { useState } from 'react';
-import { FaPaperPlane } from 'react-icons/fa';
+import { FaPaperPlane, FaPaperclip } from 'react-icons/fa';
 
+/**
+ * MainApp Component
+ * Core application component that handles note taking and media attachment functionality
+ */
 function MainApp() {
+  // === STATE MANAGEMENT ===
   const [note, setNote] = useState('');
   const [mediaFile, setMediaFile] = useState(null);
 
+  // === EVENT HANDLERS ===
+  /**
+   * Handles changes to the note input field
+   * Logs the note content for debugging (truncated if > 50 chars)
+   */
   const handleNoteChange = (e) => {
     setNote(e.target.value);
     console.log('Note content updated:', e.target.value.length > 50 ? 
       `${e.target.value.substring(0, 50)}...` : e.target.value);
   };
 
+  /**
+   * Handles file attachment functionality
+   * Processes and validates uploaded media files
+   */
   const handleMediaChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setMediaFile(e.target.files[0]);
-      console.log('Media file selected:', e.target.files[0].name);
-      console.log('File details:', {
-        type: e.target.files[0].type,
-        size: `${(e.target.files[0].size / 1024).toFixed(2)} KB`,
-        lastModified: new Date(e.target.files[0].lastModified).toLocaleString()
+      const file = e.target.files[0];
+      setMediaFile(file);
+      console.log('Media file attached:', {
+        name: file.name,
+        type: file.type,
+        size: `${(file.size / 1024).toFixed(2)} KB`,
+        timestamp: new Date().toISOString()
       });
     } else {
-      console.log('No media file selected or file selection canceled');
+      console.log('Media file attachment cancelled');
     }
   };
 
+  /**
+   * Handles form submission for notes and media
+   * Logs submission details including note length and media information
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log('Note submission initiated:', {
+      noteLength: note.length,
+      hasMedia: !!mediaFile,
+      timestamp: new Date().toISOString(),
+      preview: note.substring(0, 50) + (note.length > 50 ? '...' : '')
+    });
     // Handle the submission of note and media
     console.log('Submit button clicked!');
     console.log('Form submission details:');
@@ -43,44 +68,45 @@ function MainApp() {
     }
   };
 
+  // === COMPONENT RENDER ===
   return (
     <div className="App">
-      <header className="App-header">
+      {/* Main Content Area */}
+      <div className="app-content">
         <h1 className="app-title">note-tortious</h1>
-        <div className="note-card">
-          <form onSubmit={handleSubmit}>
+        {/* Future content area placeholder */}
+      </div>
+
+      {/* Message Input Bar */}
+      <div className="chat-bar-container">
+        <form onSubmit={handleSubmit} className="chat-bar">
+          <div className="input-group">
             <textarea
               value={note}
               onChange={handleNoteChange}
-              placeholder="Write your note here I will check canvas..."
-              className="note-textarea"
+              placeholder="Message..."
+              className="message-input"
+              rows="1"
               onFocus={() => console.log('Note textarea focused')}
             />
-            <div className="form-footer">
-              <label 
-                className="custom-file-upload"
-                onClick={() => console.log('Attach media button clicked')}
-              >
+            {/* Action Buttons */}
+            <div className="button-group">
+              <label className="attach-button">
                 <input
                   type="file"
                   onChange={handleMediaChange}
                   accept="image/*,video/*,audio/*"
                   className="file-input"
                 />
-                <span>Attach Media</span>
+                <FaPaperclip className="attach-icon" />
               </label>
-              <button 
-                type="submit" 
-                className="submit-button"
-                onClick={() => console.log('Send button clicked - submitting note')}
-              >
-                <FaPaperPlane className="paper-plane-icon" />
-                <span>Send</span>
+              <button type="submit" className="send-button">
+                <FaPaperPlane className="send-icon" />
               </button>
             </div>
-          </form>
-        </div>
-      </header>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
