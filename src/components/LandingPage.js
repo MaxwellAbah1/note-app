@@ -1,7 +1,15 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
-import { FaFeatherAlt, FaChevronDown, FaMagic, FaMicrophone, FaBook, FaBrain, FaGraduationCap, FaChartLine } from 'react-icons/fa';
+import {
+  FaFeatherAlt, 
+  FaChevronDown, 
+  FaMagic, 
+  FaMicrophone, 
+  FaBook, 
+  FaBrain, 
+  FaGraduationCap
+ } from 'react-icons/fa';
 
 const LandingPage = () => {
   useEffect(() => {
@@ -195,20 +203,19 @@ const LandingPage = () => {
         </Link>
         <p className="cta-subtitle">Join thousands of students already learning smarter</p>
       </section>
-
-      {/* Footer */}
+      {/* Simplified Footer with About Section */}
       <footer className="landing-footer">
         <div className="footer-content">
-          <div className="footer-links">
-            <Link to="/about">About</Link>
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/faq">FAQ</Link>
-            <Link to="/contact">Contact</Link>
-            <Link to="/privacy">Privacy Policy</Link>
+          <div className="about-section">
+            <h3 className="about-heading">About note-tortious</h3>
+            <p className="about-text">
+              We're dedicated to transforming the way students learn by leveraging AI technology to convert lectures into 
+              smart, organized study materials. Our mission is to help students focus on understanding concepts rather than 
+              just taking notes, making education more effective and accessible for everyone.
+            </p>
           </div>
-          <div className="footer-social">
-            <FaChartLine className="stats-icon" />
-            <span>Join over 1,000 successful students</span>
+          <div className="copyright">
+            <p>&copy; {new Date().getFullYear()} note-tortious. All rights reserved.</p>
           </div>
         </div>
       </footer>

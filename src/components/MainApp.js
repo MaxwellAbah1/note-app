@@ -1,6 +1,8 @@
 import '../App.css';
 import { useState } from 'react';
-import { FaPaperPlane, FaPaperclip } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaPaperPlane, FaPaperclip, FaSignOutAlt, FaUser } from 'react-icons/fa';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * MainApp Component
@@ -10,6 +12,8 @@ function MainApp() {
   // === STATE MANAGEMENT ===
   const [note, setNote] = useState('');
   const [mediaFile, setMediaFile] = useState(null);
+  const { currentUser, logout } = useAuth();
+  const navigate = useNavigate();
 
   // === EVENT HANDLERS ===
   /**
@@ -59,6 +63,7 @@ function MainApp() {
     console.log('- Note content length:', note.length);
     console.log('- Note preview:', note.length > 50 ? `${note.substring(0, 50)}...` : note);
     console.log('- Media attached:', mediaFile ? 'Yes' : 'No');
+
     if (mediaFile) {
       console.log('- Media file:', {
         name: mediaFile.name,
@@ -68,12 +73,40 @@ function MainApp() {
     }
   };
 
+  /**
+   * Handles user logout
+   * Signs out the user and redirects to login page
+   */
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  };
+
   // === COMPONENT RENDER ===
   return (
     <div className="App">
       {/* Main Content Area */}
       <div className="app-content">
         <h1 className="app-title">note-tortious</h1>
+        
+        {/* User Profile Section */}
+        <div className="user-profile">
+          <div className="user-info">
+            <FaUser className="user-icon" />
+            <div className="user-details">
+              <p className="user-name">{currentUser.displayName || 'User'}</p>
+              <p className="user-email">{currentUser.email}</p>
+            </div>
+          </div>
+          <button onClick={handleLogout} className="logout-button">
+            <FaSignOutAlt /> Logout
+          </button>
+        </div>
+        
         {/* Future content area placeholder */}
       </div>
 

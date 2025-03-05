@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaArrowLeft, FaUserPlus } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaArrowLeft, FaUserPlus, FaExclamationTriangle } from 'react-icons/fa';
 import './AuthPages.css';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * SignupPage Component
@@ -18,8 +19,10 @@ const SignupPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [formTouched, setFormTouched] = useState({});
+  const [authError, setAuthError] = useState('');
   
   const navigate = useNavigate();
+  const { signup } = useAuth();
 
   // === FORM VALIDATION ===
   /**
@@ -93,7 +96,7 @@ const SignupPage = () => {
    * Handles form submission
    * Validates all fields and processes signup if valid
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Mark all fields as touched
@@ -117,6 +120,8 @@ const SignupPage = () => {
     }
     
     setIsSubmitting(true);
+    setAuthError('');
+    
     console.log('Signup initiated:', {
       name,
       email,
@@ -124,13 +129,27 @@ const SignupPage = () => {
       timestamp: new Date().toISOString()
     });
     
-    // Simulating API call delay
-    setTimeout(() => {
-      // For now, just navigate to the main app without authentication
+    try {
+      // Create user with Firebase Authentication
+      await signup(email, password, name);
       navigate('/app');
+    } catch (error) {
+      console.error('Signup error:', error);
+      let errorMessage = 'Failed to create an account.';
+      
+      // Handle specific Firebase auth errors
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Email is already in use';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email format';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password is too weak';
+      }
+      
+      setAuthError(errorMessage);
+    } finally {
       setIsSubmitting(false);
-      console.log('Signup completed, navigating to app');
-    }, 800);
+    }
   };
 
   /**
@@ -163,6 +182,14 @@ const SignupPage = () => {
         <h1 className="auth-title">Create Account</h1>
         <p className="auth-subtitle">Join us to start taking beautiful notes</p>
         
+        {/* Auth Error Display */}
+        {authError && (
+          <div className="auth-error">
+            <FaExclamationTriangle className="error-icon" />
+            <span>{authError}</span>
+          </div>
+        )}
+        
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="auth-form">
           {/* Name Input Field */}
@@ -180,6 +207,7 @@ const SignupPage = () => {
                 required
                 placeholder="Enter your name"
                 className={errors.name ? 'error-input' : ''}
+                disabled={isSubmitting}
               />
             </div>
             {errors.name && <span className="error-message">{errors.name}</span>}
@@ -200,6 +228,7 @@ const SignupPage = () => {
                 required
                 placeholder="Enter your email"
                 className={errors.email ? 'error-input' : ''}
+                disabled={isSubmitting}
               />
             </div>
             {errors.email && <span className="error-message">{errors.email}</span>}
@@ -220,12 +249,14 @@ const SignupPage = () => {
                 required
                 placeholder="Create a password"
                 className={errors.password ? 'error-input' : ''}
+                disabled={isSubmitting}
               />
               <button 
                 type="button" 
                 className="toggle-password"
                 onClick={() => togglePasswordVisibility('password')}
                 tabIndex="-1"
+                disabled={isSubmitting}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
@@ -248,12 +279,14 @@ const SignupPage = () => {
                 required
                 placeholder="Confirm your password"
                 className={errors.confirmPassword ? 'error-input' : ''}
+                disabled={isSubmitting}
               />
               <button 
                 type="button" 
                 className="toggle-password"
                 onClick={() => togglePasswordVisibility('confirmPassword')}
                 tabIndex="-1"
+                disabled={isSubmitting}
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </button>

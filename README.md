@@ -1,11 +1,15 @@
 Basic App
 
 http://localhost:3000/          is landing page
+
 http://localhost:3000/loginin   is login
+
 http://localhost:3000/signup    is signup
+
 http://localhost:3000/app       Basic app
 
 Make Branches 
+
 
 # Getting Started with Create React App
 

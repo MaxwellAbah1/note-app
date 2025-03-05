@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSignInAlt, FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaSignInAlt, FaEnvelope, FaLock, FaExclamationTriangle } from 'react-icons/fa';
 import './AuthPages.css';
+import { useAuth } from '../contexts/AuthContext';
 
 /**
  * LoginPage Component
@@ -12,15 +13,20 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   // === EVENT HANDLERS ===
   /**
    * Handles form submission
    * Validates credentials and processes login attempt
    */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Reset error state
+    setError('');
     setIsSubmitting(true);
     
     console.log('Login attempt:', {
@@ -29,12 +35,27 @@ const LoginPage = () => {
       emailValid: /\S+@\S+\.\S+/.test(email)
     });
     
-    // Simulating API call delay
-    setTimeout(() => {
-      // For now, just navigate to the main app without authentication
+    try {
+      // Use Firebase authentication to login
+      await login(email, password);
       navigate('/app');
+    } catch (error) {
+      console.error('Login error:', error);
+      let errorMessage = 'Failed to log in. Please check your credentials.';
+      
+      // Handle specific Firebase auth errors
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = 'Invalid email or password';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many unsuccessful login attempts. Please try again later.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Invalid email format';
+      }
+      
+      setError(errorMessage);
+    } finally {
       setIsSubmitting(false);
-    }, 800);
+    }
   };
 
   // === COMPONENT RENDER ===
@@ -43,6 +64,14 @@ const LoginPage = () => {
       <div className="auth-container">
         {/* Header Section */}
         <h1 className="auth-title">Welcome Back</h1>
+        
+        {/* Error Message Display */}
+        {error && (
+          <div className="auth-error">
+            <FaExclamationTriangle className="error-icon" />
+            <span>{error}</span>
+          </div>
+        )}
         
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="auth-form">
@@ -60,6 +89,7 @@ const LoginPage = () => {
               placeholder="Enter your email"
               autoComplete="email"
               className="input-field"
+              disabled={isSubmitting}
             />
           </div>
           
@@ -77,6 +107,7 @@ const LoginPage = () => {
               placeholder="Enter your password"
               autoComplete="current-password"
               className="input-field"
+              disabled={isSubmitting}
             />
           </div>
           
